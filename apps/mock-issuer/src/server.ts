@@ -43,6 +43,29 @@ app.use(
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
+ * GET /
+ * Root directory & health overview
+ */
+app.get('/', (_req, res) => {
+  res.json({
+    service: 'ZK-KYC Mock Issuer Service',
+    description: 'Simulated DigiLocker/University Credential Issuer for ZK-KYC Testnet Demo',
+    issuerAddress: issuerSigner.address,
+    status: 'online',
+    endpoints: {
+      'GET /health': 'Service health status',
+      'GET /issuer-info': 'Public issuer identity & supported document types',
+      'GET /documents': 'List available document templates',
+      'POST /issue': 'Issue a new signed credential (JSON body: { holderAddress, documentType, fieldOverrides? })',
+      'POST /revoke': 'Revoke a credential by root (JSON body: { credentialRoot, reason? })',
+    },
+    walletAppUrl: 'http://localhost:3000',
+    verifierAppUrl: 'http://localhost:5174',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
  * GET /health
  * Health check endpoint.
  */
