@@ -1,0 +1,28 @@
+{
+  "name": "@zk-kyc/mock-issuer",
+  "version": "0.1.0",
+  "description": "Mock DigiLocker/university issuer service for ZK-KYC testnet demo",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "start": "node dist/server.js"
+  },
+  "dependencies": {
+    "@zk-kyc/shared-types": "workspace:*",
+    "@zk-kyc/zk-core": "workspace:*",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.11.1",
+    "express": "^4.19.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.12.7",
+    "@types/uuid": "^9.0.8",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.4.5"
+  }
+}
