@@ -1,0 +1,48 @@
+{
+  "name": "@zk-kyc/verifier-sdk",
+  "version": "0.1.0",
+  "description": "Installable verifier SDK for ZK-KYC — request and verify zero-knowledge credential proofs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "@zk-kyc/shared-types": "workspace:*",
+    "@zk-kyc/zk-core": "workspace:*",
+    "ethers": "^6.11.1",
+    "qrcode": "^1.5.3",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "@types/qrcode": "^1.5.5",
+    "@types/uuid": "^9.0.8",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.4",
+    "typescript": "^5.4.5"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.test.ts"],
+    "moduleNameMapper": {
+      "^@zk-kyc/zk-core$": "<rootDir>/../zk-core/src/index.ts",
+      "^@zk-kyc/shared-types$": "<rootDir>/../shared-types/src/index.ts"
+    }
+  },
+  "peerDependencies": {
+    "ethers": "^6.0.0"
+  }
+}
