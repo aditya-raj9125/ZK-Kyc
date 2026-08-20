@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+**/dist/
+build/
+**/build/
+.next/
+**/.next/
+out/
+**/out/
+*.js.map
+*.d.ts.map
+
+# ZK artifacts (generated, not committed)
+packages/zk-core/src/circuits/build/
+packages/zk-core/src/circuits/*.zkey
+packages/zk-core/src/circuits/*_js/
+
+# Hardhat / Foundry
+contracts/artifacts/
+contracts/cache/
+contracts/typechain-types/
+
+# Issuer mock keys (never commit real keys)
+apps/mock-issuer/keys/*.json
+# Keep the example key in repo for CI
+!apps/mock-issuer/keys/issuer.example.json
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
