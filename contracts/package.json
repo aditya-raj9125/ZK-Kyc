@@ -1,0 +1,23 @@
+{
+  "name": "@zk-kyc/contracts",
+  "version": "0.1.0",
+  "description": "Hardhat project: IssuerRegistry and CredentialStatus contracts for ZK-KYC",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:amoy": "hardhat run scripts/deploy.ts --network amoy",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "node": "hardhat node",
+    "verify:amoy": "hardhat verify --network amoy"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.2"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@types/node": "^20.12.7",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.3",
+    "typescript": "^5.4.5"
+  }
+}
