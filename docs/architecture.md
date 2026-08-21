@@ -53,7 +53,7 @@ Before implementation, we studied the following systems and note the key pattern
 │  Express REST: /issue, /revoke, /documents, /issuer-info    │
 │  Builds Merkle tree, signs root with ECDSA                  │
 │                                                             │
-│  Layer 1b: Smart Contracts (contracts/) — Polygon Amoy      │
+│  Layer 1b: Smart Contracts (contracts/) — Ethereum Sepolia  │
 │  IssuerRegistry.sol — trusted issuer mapping                │
 │  CredentialStatus.sol — credential root → status            │
 └─────────────────────────────────────────────────────────────┘

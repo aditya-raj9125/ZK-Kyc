@@ -1,6 +1,6 @@
 # contracts — ZK-KYC Smart Contracts
 
-Hardhat project deploying two minimal Solidity contracts to Polygon Amoy testnet.
+Hardhat project deploying two minimal Solidity contracts to Ethereum Sepolia testnet.
 
 ## Contracts
 
@@ -17,12 +17,12 @@ Credential revocation registry (EAS-inspired minimal footprint).
 - `isActive(bytes32) → bool` — public view
 - `getStatus(bytes32) → Status` — public view
 
-## Deployed Addresses (Polygon Amoy)
+## Deployed Addresses (Ethereum Sepolia)
 
 | Contract | Address | Explorer |
 |----------|---------|---------|
-| IssuerRegistry | TBD — run `pnpm contracts:deploy` | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
-| CredentialStatus | TBD — run `pnpm contracts:deploy` | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
+| IssuerRegistry | `0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2` | [sepolia.etherscan.io](https://sepolia.etherscan.io/address/0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2) |
+| CredentialStatus | `0xDDD18e10FC082911e30428B5EDAbd21AaF098822` | [sepolia.etherscan.io](https://sepolia.etherscan.io/address/0xDDD18e10FC082911e30428B5EDAbd21AaF098822) |
 
 *Update this table after deployment.*
 
@@ -32,12 +32,12 @@ Credential revocation registry (EAS-inspired minimal footprint).
 # Run tests (local Hardhat node)
 pnpm contracts:test
 
-# Deploy to Polygon Amoy
+# Deploy to Ethereum Sepolia
 pnpm contracts:deploy
 
-# Verify on Polygonscan
-npx hardhat verify --network amoy <ISSUER_REGISTRY_ADDRESS>
-npx hardhat verify --network amoy <CREDENTIAL_STATUS_ADDRESS> <ISSUER_REGISTRY_ADDRESS>
+# Verify on Etherscan
+npx hardhat verify --network sepolia <ISSUER_REGISTRY_ADDRESS>
+npx hardhat verify --network sepolia <CREDENTIAL_STATUS_ADDRESS> <ISSUER_REGISTRY_ADDRESS>
 ```
 
 ## Constructor Arguments
@@ -47,4 +47,8 @@ npx hardhat verify --network amoy <CREDENTIAL_STATUS_ADDRESS> <ISSUER_REGISTRY_A
 
 ## Faucet
 
-Get testnet POL: https://faucets.chain.link/polygon-amoy
+Get testnet Sepolia ETH:
+- Google Cloud Web3 Faucet: https://cloud.google.com/application/web3/faucet/ethereum/sepolia
+- Sepolia Faucet: https://sepoliafaucet.com/
+- Chainlink Faucet: https://faucets.chain.link/sepolia
+

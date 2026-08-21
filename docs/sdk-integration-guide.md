@@ -23,7 +23,7 @@ pnpm add @zk-kyc/verifier-sdk
 ```typescript
 import { requestProof, verifyProof } from '@zk-kyc/verifier-sdk';
 
-// Contract addresses (Polygon Amoy testnet)
+// Contract addresses (Ethereum Sepolia testnet)
 const ISSUER_REGISTRY_ADDRESS = '0x...';  // from contracts/README.md
 const CREDENTIAL_STATUS_ADDRESS = '0x...'; // from contracts/README.md
 const ISSUER_ADDRESS = '0x...';           // from mock issuer /issuer-info
@@ -53,7 +53,7 @@ const proof = await pollRelayForProof(requestId);
 const result = await verifyProof(proof, {
   issuerRegistryAddress: ISSUER_REGISTRY_ADDRESS,
   credentialStatusAddress: CREDENTIAL_STATUS_ADDRESS,
-  rpcUrl: 'https://rpc-amoy.polygon.technology/', // free, no API key
+  rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com', // free, no API key
 });
 
 if (result.valid) {
@@ -119,7 +119,7 @@ Verifies a proof returned by the wallet. Performs all checks client-side.
 |-------|------|----------|-------------|
 | `issuerRegistryAddress` | `string` | ✓ | Deployed IssuerRegistry address |
 | `credentialStatusAddress` | `string` | ✓ | Deployed CredentialStatus address |
-| `rpcUrl` | `string` | ✗ | JSON-RPC URL (default: Amoy public) |
+| `rpcUrl` | `string` | ✗ | JSON-RPC URL (default: Sepolia public) |
 | `skipOnChainChecks` | `boolean` | ✗ | Skip on-chain reads (offline testing) |
 
 **Returns:**
@@ -242,13 +242,13 @@ app.get('/api/relay/:requestId', (req, res) => {
 
 ## Testnet Contract Addresses
 
-Network: **Polygon Amoy** (Chain ID: 80002)
-RPC: `https://rpc-amoy.polygon.technology/` (free, no API key)
+Network: **Ethereum Sepolia** (Chain ID: 11155111)
+RPC: `https://ethereum-sepolia-rpc.publicnode.com` (free, no API key)
 
 | Contract | Address | Explorer |
 |----------|---------|---------|
-| IssuerRegistry | See `contracts/README.md` | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
-| CredentialStatus | See `contracts/README.md` | [amoy.polygonscan.com](https://amoy.polygonscan.com) |
+| IssuerRegistry | `0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2` | [sepolia.etherscan.io](https://sepolia.etherscan.io/address/0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2) |
+| CredentialStatus | `0xDDD18e10FC082911e30428B5EDAbd21AaF098822` | [sepolia.etherscan.io](https://sepolia.etherscan.io/address/0xDDD18e10FC082911e30428B5EDAbd21AaF098822) |
 
 ---
 

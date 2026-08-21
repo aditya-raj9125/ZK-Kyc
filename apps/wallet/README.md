@@ -4,7 +4,7 @@ ZK-KYC Wallet — the main user-facing credential dashboard.
 
 ## Purpose
 
-- Connect MetaMask/WalletConnect wallet (Polygon Amoy testnet)
+- Connect MetaMask/WalletConnect wallet (Ethereum Sepolia testnet)
 - Import credentials from the mock issuer
 - Display credentials as cards with live on-chain status
 - View Merkle tree structure of each credential

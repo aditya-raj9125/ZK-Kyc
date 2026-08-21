@@ -13,7 +13,7 @@ Reviewers and judges should read this to understand the scope and production upg
 | ECDSA issuer signature | ✅ Real | ethers.js `wallet.signMessage` with EIP-191 |
 | Merkle inclusion proof | ✅ Real | Verified by re-computing root from leaf + siblings |
 | Predicate commitment | ✅ Real | SHA-256(value, salt) commitment scheme |
-| Smart contracts | ✅ Real | Deployed Solidity on Polygon Amoy |
+| Smart contracts | ✅ Real | Deployed Solidity on Ethereum Sepolia |
 | On-chain issuer registry | ✅ Real | `IssuerRegistry.sol` read by verifier SDK |
 | On-chain credential status | ✅ Real | `CredentialStatus.sol` read by verifier SDK |
 | Full ZK range proof | ❌ Simplified | Commitment scheme used; Groth16 circuit documented as upgrade |
@@ -79,7 +79,7 @@ without redesigning the core.
 
 ### 5. On-Chain Assumptions
 
-- Credential roots are anchored on Polygon Amoy (testnet, no real value)
+- Credential roots are anchored on Ethereum Sepolia (testnet, no real value)
 - Gas costs are faucet-funded (zero monetary cost as required)
 - No mainnet deployment — this is explicitly testnet-only
 
