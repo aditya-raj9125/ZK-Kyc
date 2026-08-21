@@ -69,16 +69,22 @@ function ProofRequestContent() {
       const payloadJson = JSON.stringify(proofPayload, null, 2);
       setProofPayloadJson(payloadJson);
 
-      // Post proof to relay URL
-      const relayResponse = await fetch(request.relayUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ requestId: request.requestId, proof: proofPayload }),
-      });
+      // 1. Broadcast via BroadcastChannel (instant cross-tab communication)
+      try {
+        const channel = new BroadcastChannel('zk_kyc_proof_relay');
+        channel.postMessage({ requestId: request.requestId, proof: proofPayload });
+        channel.close();
+      } catch {}
 
-      if (!relayResponse.ok) {
-        // Non-fatal: proof generated, relay unavailable
-        console.warn('Relay post failed — proof generated but not delivered to relay');
+      // 2. Post proof to relay URL
+      try {
+        await fetch(request.relayUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ requestId: request.requestId, proof: proofPayload }),
+        });
+      } catch (err) {
+        console.warn('Relay post failed (network fallback):', err);
       }
 
       setStatus('done');
