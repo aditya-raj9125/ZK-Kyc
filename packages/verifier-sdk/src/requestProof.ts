@@ -48,6 +48,21 @@ export interface RequestProofResult {
   qrPayload: QRPayload;
 }
 
+function encodeBase64Url(str: string): string {
+  if (typeof window !== 'undefined' || typeof btoa !== 'undefined') {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]!);
+    }
+    return btoa(binary)
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+  }
+  return Buffer.from(str, 'utf-8').toString('base64url');
+}
+
 /**
  * Creates a proof request and generates a QR code for the wallet to scan.
  *
@@ -84,8 +99,8 @@ export async function requestProof(config: RequestProofConfig): Promise<RequestP
     ...(config.verifierAddress ? { verifierAddress: config.verifierAddress } : {}),
   };
 
-  // Encode as base64url JSON
-  const encodedRequest = Buffer.from(JSON.stringify(proofRequest), 'utf-8').toString('base64url');
+  // Encode as base64url JSON (browser & Node compatible)
+  const encodedRequest = encodeBase64Url(JSON.stringify(proofRequest));
 
   // Construct the wallet deep-link URL
   // The wallet reads the `proofRequest` URL param and decodes it
@@ -105,3 +120,4 @@ export async function requestProof(config: RequestProofConfig): Promise<RequestP
     },
   };
 }
+
