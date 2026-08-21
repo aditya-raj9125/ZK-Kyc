@@ -16,82 +16,79 @@
 
 ---
 
-## 🌟 Executive Overview
+## Executive Overview
 
-ZK-KYC is a **user-controlled digital credential wallet** and **client-side verification SDK** featuring a **zero-knowledge selective-disclosure layer**. It is engineered as a privacy-first extension to national identity infrastructures like **DigiLocker** and **NAD** (National Academic Depository).
+ZK-KYC is a **user-controlled digital credential wallet** and **client-side verification SDK** featuring a **zero-knowledge selective-disclosure layer**. It is engineered as a privacy-first extension to national identity infrastructures such as **DigiLocker** and **NAD** (National Academic Depository).
 
 ### The Privacy Problem
-Traditional KYC requires users to upload full PDFs or scans of government IDs. This leaks sensitive personal identifiable information (PII) such as full names, Aadhaar/ID numbers, home addresses, dates of birth, and exact financial figures to third parties that only need to confirm a single eligibility rule.
+Traditional KYC requires users to upload full documents or scans of government-issued IDs. This exposes sensitive Personally Identifiable Information (PII) — including full names, national identity numbers, home addresses, dates of birth, and exact financial figures — to third parties that only need to verify a single compliance condition.
 
 ### The ZK-KYC Solution
 With ZK-KYC:
-1. **Self-Sovereign Storage**: Only cryptographic leaf hashes and the signed Merkle root are stored on the user's device. No raw documents are ever uploaded to a central server.
-2. **Selective Disclosure & Predicate Proofs**: Users can cryptographically prove specific conditions (*"annualIncome ≥ 8 LPA"* or *"CGPA ≥ 8.0"*) without revealing exact numbers or any other credential fields.
-3. **Standalone Verifier SDK**: Any third-party application can integrate verification with 3 lines of code. Verification runs client-side with zero backend dependencies, anchored by live smart contracts on **Ethereum Sepolia**.
+1. **Self-Sovereign Storage**: Only cryptographic leaf hashes and the signed Merkle root are stored on the user device. Raw documents are never uploaded to a central server.
+2. **Selective Disclosure and Predicate Proofs**: Users can cryptographically prove specific conditions (for example, `annualIncome >= 800000` or `cgpa >= 8.0`) without disclosing exact figures or unrelated credential attributes.
+3. **Standalone Verifier SDK**: Third-party applications integrate verification client-side with minimal code, backed by on-chain trust registries on **Ethereum Sepolia**.
 
-> 💡 **Core Architecture Principle**: Strict separation of concerns — **Wallet ≠ Verifier**. The wallet manages identity and approves disclosures; verifier applications only consume proofs via the installable SDK.
+> **Architecture Principle**: Strict separation of concerns — **Wallet != Verifier**. The wallet manages identity and approves disclosures; verifier applications only consume cryptographic proofs via the installable SDK.
 
 ---
 
-## 🏛️ Interactive System Architecture
+## System Architecture
 
 ```mermaid
 flowchart TD
-    %% Styling Classes
     classDef l4 fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#e0e7ff;
     classDef l3 fill:#14532d,stroke:#4ade80,stroke-width:2px,color:#dcfce7;
     classDef l2 fill:#3b0764,stroke:#c084fc,stroke-width:2px,color:#fae8ff;
     classDef l1a fill:#701a75,stroke:#f472b6,stroke-width:2px,color:#fdf2f8;
     classDef l1b fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#e0f2fe;
-    classDef bridge fill:#111827,stroke:#64748b,stroke-width:1px,stroke-dasharray: 4 4,color:#94a3b8;
 
-    subgraph L4 ["📱 LAYER 4: Verifier SDK & Third-Party Integration"]
-        SDK["📦 @zk-kyc/verifier-sdk<br/>• requestProof() • verifyProof()"]:::l4
-        App["🔍 Mock Verifier App (Port 5174)<br/>• QR Generator • Predicate Selector"]:::l4
-        App -->|"Calls API"| SDK
+    subgraph L4 ["Layer 4: Verifier SDK and Third-Party Integration"]
+        SDK["@zk-kyc/verifier-sdk<br/>• requestProof() • verifyProof()"]:::l4
+        App["Mock Verifier App (Port 5174)<br/>• QR Generator • Predicate Selector"]:::l4
+        App -->|"Calls SDK API"| SDK
     end
 
-    subgraph L3 ["⚡ LAYER 3: Cryptographic Core Engine"]
-        ZK["📐 @zk-kyc/zk-core<br/>• SHA-256 Merkle Tree Engine<br/>• Leaf Inclusion Proofs<br/>• Predicate Witness Generator"]:::l3
+    subgraph L3 ["Layer 3: Cryptographic Core Engine"]
+        ZK["@zk-kyc/zk-core<br/>• SHA-256 Merkle Tree Engine<br/>• Leaf Inclusion Proofs<br/>• Predicate Witness Generator"]:::l3
     end
 
-    subgraph L2 ["👛 LAYER 2: Self-Sovereign Identity Wallet"]
-        WalletApp["🔐 Next.js 14 Wallet App (Port 3000)<br/>• RainbowKit + Wagmi Connector<br/>• Credential Dashboard<br/>• Interactive Proof Approval UI"]:::l2
-        Store[("💾 Local Storage<br/>(Hashes + Roots Only)")]:::l2
+    subgraph L2 ["Layer 2: Self-Sovereign Identity Wallet"]
+        WalletApp["Next.js 14 Wallet App (Port 3000)<br/>• RainbowKit + Wagmi Connector<br/>• Credential Dashboard<br/>• Proof Approval Interface"]:::l2
+        Store[("Local Storage<br/>(Hashes and Roots Only)")]:::l2
         WalletApp <-->|"Read / Write"| Store
     end
 
-    subgraph L1 ["⛓️ LAYER 1: Trust Anchors & Identity Issuance"]
-        subgraph L1A ["🏛️ Layer 1a: Issuer Authority"]
-            Issuer["🏢 Mock DigiLocker Issuer (Port 3001)<br/>• REST API: /issue /revoke<br/>• Merkle Builder & ECDSA Signer"]:::l1a
+    subgraph L1 ["Layer 1: Trust Anchors and Identity Issuance"]
+        subgraph L1A ["Layer 1a: Issuer Authority"]
+            Issuer["Mock DigiLocker Issuer (Port 3001)<br/>• REST API: /issue /revoke<br/>• Merkle Builder and ECDSA Signer"]:::l1a
         end
-        subgraph L1B ["🌐 Layer 1b: Ethereum Sepolia (11155111)"]
-            Registry["📜 IssuerRegistry.sol<br/>0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2"]:::l1b
-            Status["📜 CredentialStatus.sol<br/>0xDDD18e10FC082911e30428B5EDAbd21AaF098822"]:::l1b
+        subgraph L1B ["Layer 1b: Ethereum Sepolia (11155111)"]
+            Registry["IssuerRegistry.sol<br/>0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2"]:::l1b
+            Status["CredentialStatus.sol<br/>0xDDD18e10FC082911e30428B5EDAbd21AaF098822"]:::l1b
         end
     end
 
-    %% Inter-layer connections
-    Issuer -.->|"Signs Root & Registers"| Registry
+    Issuer -.->|"Registers Signer"| Registry
     Issuer -.->|"Anchors / Revokes"| Status
 
     WalletApp -->|"1. Request Credential"| Issuer
     Issuer -->|"2. Return Signed Merkle Root"| WalletApp
 
     App -->|"3. QR / Deep-link Request"| WalletApp
-    WalletApp -->|"4. Merkle Math & Proof Gen"| ZK
-    WalletApp -->|"5. Proof Payload (Relay / Broadcast)"| App
+    WalletApp -->|"4. Merkle Math and Proof Gen"| ZK
+    WalletApp -->|"5. Transmit Proof Payload"| App
 
     SDK -->|"6. Verify Merkle Proof"| ZK
-    SDK -->|"7. Check Trusted Issuer"| Registry
-    SDK -->|"8. Check Revocation Status"| Status
+    SDK -->|"7. Verify Trusted Issuer"| Registry
+    SDK -->|"8. Verify Revocation Status"| Status
 ```
 
 ---
 
-## 🌲 Merkle Tree & Selective Disclosure Mechanics
+## Merkle Tree and Selective Disclosure Mechanics
 
-How a 4-field credential proves a single condition without revealing any other data:
+The diagram below illustrates how a four-field credential proves a single condition without revealing any other attributes:
 
 ```mermaid
 flowchart TD
@@ -100,24 +97,24 @@ flowchart TD
     classDef sibling fill:#1e1b4b,stroke:#818cf8,stroke-width:2px,color:#e0e7ff;
     classDef rootNode fill:#312e81,stroke:#6366f1,stroke-width:3px,color:#ffffff,font-weight:bold;
 
-    subgraph Fields ["📄 Document Fields (Private in Wallet)"]
+    subgraph Fields ["Document Fields (Private to Wallet)"]
         F0["studentName: 'Arjun Sharma'"]:::hidden
-        F1["cgpa: 8.7 (Matches: gte 8.0)"]:::disclosed
+        F1["cgpa: 8.7 (Satisfies: gte 8.0)"]:::disclosed
         F2["rollNumber: 'CS2021001'"]:::hidden
         F3["year: 2024"]:::hidden
     end
 
-    subgraph Leaves ["🌱 Merkle Leaf Hashes"]
-        H0["H₀ = SHA-256(studentName)"]:::sibling
-        H1["H₁ = SHA-256(cgpa)"]:::disclosed
-        H2["H₂ = SHA-256(rollNumber)"]:::hidden
-        H3["H₃ = SHA-256(year)"]:::hidden
+    subgraph Leaves ["Merkle Leaf Hashes"]
+        H0["H0 = SHA-256(studentName)"]:::sibling
+        H1["H1 = SHA-256(cgpa)"]:::disclosed
+        H2["H2 = SHA-256(rollNumber)"]:::hidden
+        H3["H3 = SHA-256(year)"]:::hidden
     end
 
-    subgraph Tree ["🌳 Tree Aggregation"]
-        H01["H₀₁ = SHA-256(H₀ + H₁)"]:::disclosed
-        H23["H₂₃ = SHA-256(H₂ + H₃)"]:::sibling
-        Root["👑 Merkle Root = SHA-256(H₀₁ + H₂₃)<br/>(Signed by Issuer on Sepolia)"]:::rootNode
+    subgraph Tree ["Tree Aggregation"]
+        H01["H01 = SHA-256(H0 + H1)"]:::disclosed
+        H23["H23 = SHA-256(H2 + H3)"]:::sibling
+        Root["Merkle Root = SHA-256(H01 + H23)<br/>(Signed by Issuer on Sepolia)"]:::rootNode
     end
 
     F0 --> H0
@@ -133,137 +130,133 @@ flowchart TD
     H01 --> Root
     H23 --> Root
 
-    subgraph ProofPayload ["📦 Proof Transmitted to Verifier"]
+    subgraph ProofPayload ["Proof Payload Transmitted to Verifier"]
         direction LR
         P1["Disclosed: Predicate (gte 8.0)"]:::disclosed
-        P2["Proof Sibling 1: H₀"]:::sibling
-        P3["Proof Sibling 2: H₂₃"]:::sibling
+        P2["Sibling Hash 1: H0"]:::sibling
+        P3["Sibling Hash 2: H23"]:::sibling
         P4["Issuer ECDSA Signature"]:::rootNode
     end
 ```
 
-> **Privacy Guarantee**: The verifier receives only `H₀` and `H₂₃` along with `H₁`. The verifier computes `SHA-256(H₀ + H₁) = H₀₁` and `SHA-256(H₀₁ + H₂₃) = Root`. The root matches the issuer's on-chain signature, yet the verifier learns **nothing** about `studentName`, `rollNumber`, or `year`.
+> **Privacy Guarantee**: The verifier receives only `H0` and `H23` alongside `H1`. The verifier calculates `SHA-256(H0 + H1) = H01` and `SHA-256(H01 + H23) = Root`. The computed root matches the issuer signature verified against `IssuerRegistry.sol`. The verifier learns nothing about `studentName`, `rollNumber`, or `year`.
 
 ---
 
-## 🔄 End-to-End Interactive Sequence Flows
+## End-to-End Sequence Flows
 
 ### 1. Credential Issuance Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as 👤 Wallet User
-    participant Wallet as 👛 Wallet App (Port 3000)
-    participant Issuer as 🏛️ Mock Issuer (Port 3001)
-    participant Sepolia as ⛓️ Ethereum Sepolia
+    actor User as Wallet User
+    participant Wallet as Wallet App (Port 3000)
+    participant Issuer as Mock Issuer (Port 3001)
+    participant Sepolia as Ethereum Sepolia
 
-    User->>Wallet: Connect Web3 Wallet (MetaMask / Rainbow)
-    User->>Wallet: Click "Issue Credential" (e.g. Income Certificate)
+    User->>Wallet: Connect Web3 Wallet (MetaMask / RainbowKit)
+    User->>Wallet: Request Credential Issuance (Income Certificate / Marksheet)
     Wallet->>Issuer: POST /issue { holderAddress, documentType }
     
     activate Issuer
-    Note over Issuer: 1. Extract template fields<br/>2. Compute SHA-256 hash per field<br/>3. Construct Merkle Tree<br/>4. Sign keccak256(root, holder, date) with ECDSA
+    Note over Issuer: 1. Extract template fields<br/>2. Compute SHA-256 hash per field<br/>3. Construct Merkle Tree<br/>4. Sign keccak256(root, holder, timestamp) with ECDSA
     Issuer-->>Sepolia: (Optional) anchorCredential(merkleRoot)
     Issuer-->>Wallet: Return SignedCredential { leaves, merkleRoot, signature, issuerAddress }
     deactivate Issuer
 
     activate Wallet
-    Note over Wallet: Store SignedCredential + field hashes<br/>in local browser storage.<br/>Raw PII is not sent anywhere!
-    Wallet-->>User: Display Credential Card in Dashboard ✅
+    Note over Wallet: Store SignedCredential and leaf hashes in local storage.<br/>Raw PII is not transmitted to external servers.
+    Wallet-->>User: Render Credential Card in Dashboard
     deactivate Wallet
 ```
 
 ---
 
-### 2. Zero-Knowledge Proof Request & Generation Flow
+### 2. Zero-Knowledge Proof Request and Generation Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User as 👤 Wallet User
-    participant Verifier as 🔍 Mock Verifier (Port 5174)
-    participant SDK as 📦 @zk-kyc/verifier-sdk
-    participant Wallet as 👛 Wallet App (Port 3000)
-    participant Relay as 🔄 Dev Relay / BroadcastChannel
+    actor User as Wallet User
+    participant Verifier as Mock Verifier App (Port 5174)
+    participant SDK as @zk-kyc/verifier-sdk
+    participant Wallet as Wallet App (Port 3000)
+    participant Relay as Relay Channel / BroadcastChannel
 
     Verifier->>SDK: requestProof({ verifierName, docType, predicates, relayUrl })
     activate SDK
     SDK-->>Verifier: Return { qrDataUrl, walletUrl, requestId }
     deactivate SDK
 
-    Verifier->>Verifier: Render QR Code & "Open in Wallet" Deep Link
-    Verifier->>Relay: Start polling /api/relay/:requestId & listen to BroadcastChannel
+    Verifier->>Verifier: Display QR Code and Deep Link
+    Verifier->>Relay: Poll /api/relay/:requestId and listen to BroadcastChannel
 
-    User->>Wallet: Scan QR or Click Deep Link (?proofRequest=...)
+    User->>Wallet: Scan QR or Open Deep Link (?proofRequest=...)
     activate Wallet
     Wallet->>Wallet: Decode Base64URL ProofRequest payload
-    Wallet->>Wallet: Match request with local stored credentials
-    Wallet-->>User: Display Privacy Guarantee & Disclosure Consent Screen
+    Wallet->>Wallet: Query local storage for matching credential
+    Wallet-->>User: Present Disclosure Consent Screen
     User->>Wallet: Click "Approve & Generate Proof"
     
-    Note over Wallet: 1. Rebuild Merkle tree from hashes<br/>2. Extract sibling path for requested leaf<br/>3. Generate Predicate Proof payload
+    Note over Wallet: 1. Rebuild Merkle tree from leaf hashes<br/>2. Extract sibling path for requested attribute<br/>3. Construct Predicate Proof payload
     
-    Wallet->>Relay: 1. Broadcast via BroadcastChannel('zk_kyc_proof_relay')<br/>2. POST to relayUrl (/api/relay)
-    Wallet-->>User: Display "Proof Generated" Confirmation ✅
+    Wallet->>Relay: Dispatch via BroadcastChannel and HTTP POST to relayUrl
+    Wallet-->>User: Display Proof Generation Confirmation
     deactivate Wallet
 
-    Relay-->>Verifier: ProofPayload received in real-time!
+    Relay-->>Verifier: Forward ProofPayload to Verifier App
 ```
 
 ---
 
-### 3. Proof Verification & Trust Anchoring Flow
+### 3. Proof Verification and Trust Anchoring Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant Verifier as 🔍 Mock Verifier App
-    participant SDK as 📦 @zk-kyc/verifier-sdk
-    participant ZK as ⚡ @zk-kyc/zk-core
-    participant Sepolia as ⛓️ Ethereum Sepolia RPC
+    participant Verifier as Mock Verifier App
+    participant SDK as @zk-kyc/verifier-sdk
+    participant ZK as @zk-kyc/zk-core
+    participant Sepolia as Ethereum Sepolia RPC
 
     Verifier->>SDK: verifyProof(proofPayload, { issuerRegistry, credentialStatus, rpcUrl })
     activate SDK
 
-    rect rgb(20, 30, 50)
-        Note over SDK,ZK: Step 1: Cryptographic Merkle Verification
-        SDK->>ZK: verifyMerkleProof(leafHash, siblingPath, expectedRoot)
-        ZK-->>SDK: ✅ Merkle path is cryptographically valid
-        SDK->>ZK: verifyPredicateWitness(predicate, leafHash)
-        ZK-->>SDK: ✅ Predicate satisfied without revealing raw value
-    end
+    Note over SDK,ZK: Step 1: Cryptographic Merkle Verification
+    SDK->>ZK: verifyMerkleProof(leafHash, siblingPath, expectedRoot)
+    ZK-->>SDK: Return boolean (Merkle path validity)
+    SDK->>ZK: verifyPredicateWitness(predicate, leafHash)
+    ZK-->>SDK: Return boolean (Predicate condition validity)
 
-    rect rgb(30, 20, 50)
-        Note over SDK,Sepolia: Step 2: On-Chain Trust & Revocation Check
-        SDK->>SDK: Recover issuer address from ECDSA signature
-        SDK->>Sepolia: IssuerRegistry.isTrustedIssuer(issuerAddress)
-        Sepolia-->>SDK: Return true (Issuer is registered on-chain)
-        SDK->>Sepolia: CredentialStatus.isActive(credentialRoot)
-        Sepolia-->>SDK: Return true (Root is not revoked/suspended)
-    end
+    Note over SDK,Sepolia: Step 2: On-Chain Trust and Revocation Check
+    SDK->>SDK: Recover signer address from ECDSA signature
+    SDK->>Sepolia: IssuerRegistry.isTrustedIssuer(issuerAddress)
+    Sepolia-->>SDK: Return boolean (Issuer registration status)
+    SDK->>Sepolia: CredentialStatus.isActive(credentialRoot)
+    Sepolia-->>SDK: Return boolean (Revocation and suspension status)
 
     SDK-->>Verifier: Return VerificationResult { valid: true, checks: [...] }
     deactivate SDK
 
-    Verifier-->>Verifier: Display "✅ Proof Valid" with cryptographic audit breakdown!
+    Verifier-->>Verifier: Display Verification Result and Audit Trail
 ```
 
 ---
 
-## 📦 Monorepo Architecture & Package Matrix
+## Monorepo Architecture and Package Matrix
 
-The project is structured as a high-performance **pnpm workspace** with strict isolation between wallet logic, verification logic, and cryptographic primitives:
+The project is organized as a **pnpm workspace** with modular boundaries between identity management, cryptographic logic, verification interfaces, and on-chain contracts:
 
 ```mermaid
 flowchart LR
-    Shared["📦 @zk-kyc/shared-types<br/><i>(Canonical Schemas)</i>"]
-    ZKCore["⚡ @zk-kyc/zk-core<br/><i>(Merkle Math Engine)</i>"]
-    SDK["🔍 @zk-kyc/verifier-sdk<br/><i>(Client Verifier SDK)</i>"]
-    Wallet["👛 apps/wallet<br/><i>(Next.js Identity UI)</i>"]
-    Issuer["🏛️ apps/mock-issuer<br/><i>(Express Issuer API)</i>"]
-    Contracts["📜 contracts<br/><i>(Solidity Testnet Suite)</i>"]
-    DemoApp["📱 mock-verifier-app<br/><i>(Loan Demo App)</i>"]
+    Shared["@zk-kyc/shared-types<br/><i>(Canonical Schemas)</i>"]
+    ZKCore["@zk-kyc/zk-core<br/><i>(Merkle Math Engine)</i>"]
+    SDK["@zk-kyc/verifier-sdk<br/><i>(Client Verifier SDK)</i>"]
+    Wallet["apps/wallet<br/><i>(Next.js Identity UI)</i>"]
+    Issuer["apps/mock-issuer<br/><i>(Express Issuer API)</i>"]
+    Contracts["contracts<br/><i>(Solidity Testnet Suite)</i>"]
+    DemoApp["mock-verifier-app<br/><i>(Verifier Reference App)</i>"]
 
     Shared --> ZKCore
     Shared --> SDK
@@ -272,78 +265,78 @@ flowchart LR
     ZKCore --> Wallet
     ZKCore --> SDK
     SDK --> DemoApp
-    Contracts -.->|"Sepolia On-Chain"| SDK
+    Contracts -.->|"Sepolia RPC"| SDK
 ```
 
-### 📂 Workspace Packages Breakdown
+### Workspace Packages Breakdown
 
 <details open>
-<summary><b>👛 <code>apps/wallet</code> — Self-Sovereign Identity Web App</b></summary>
+<summary><b>apps/wallet — Self-Sovereign Identity Web Application</b></summary>
 
 * **Port**: `3000` | **Framework**: Next.js 14 (App Router) + Wagmi + RainbowKit
-* **Purpose**: User-facing credential wallet. Imports signed credentials, stores leaf hashes in `localStorage`, visualizes Merkle trees, and handles selective disclosure approval requests from QR codes.
+* **Function**: User-facing credential wallet. Imports signed credentials, stores leaf hashes in `localStorage`, visualizes Merkle tree nodes, and handles selective disclosure approval requests.
 * **Key Files**:
-  * [`src/lib/proof-generation.ts`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/lib/proof-generation.ts) — Browser-safe ZK proof witness generation and Base64URL encoder/decoder.
-  * [`src/lib/credential-store.ts`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/lib/credential-store.ts) — LocalStorage management ensuring raw document fields never leave user control.
-  * [`src/app/proof-request/page.tsx`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/app/proof-request/page.tsx) — Real-time disclosure consent screen with `BroadcastChannel` proof dispatch.
+  * [`src/lib/proof-generation.ts`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/lib/proof-generation.ts) — Browser-safe ZK proof witness generation and Base64URL encoding/decoding.
+  * [`src/lib/credential-store.ts`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/lib/credential-store.ts) — Client-side storage abstraction ensuring raw values remain on-device.
+  * [`src/app/proof-request/page.tsx`](file:///e:/Projects/ZK-Kyc/apps/wallet/src/app/proof-request/page.tsx) — Proof request consent screen with dual `BroadcastChannel` and HTTP dispatch.
 </details>
 
 <details open>
-<summary><b>🏛️ <code>apps/mock-issuer</code> — Simulated Government Issuer Service</b></summary>
+<summary><b>apps/mock-issuer — Simulated Government Issuer Service</b></summary>
 
 * **Port**: `3001` | **Framework**: Express + TypeScript + Ethers.js v6
-* **Purpose**: Simulates a certified DigiLocker / University issuer. Extracts structured document fields, builds SHA-256 Merkle trees, and signs Merkle roots with ECDSA private keys.
+* **Function**: Simulates a certified DigiLocker / University issuer. Extracts document fields, builds SHA-256 Merkle trees, and signs Merkle roots with ECDSA keys.
 * **Endpoints**:
-  * `POST /issue` — Issues signed credentials with Merkle root & leaf hashes.
+  * `POST /issue` — Issues signed credentials with Merkle root and leaf hashes.
   * `POST /revoke` — Revokes an existing credential root on-chain.
-  * `GET /documents` — Returns available credential templates (`INCOME_CERTIFICATE`, `MARKSHEET`).
-  * `GET /issuer-info` — Returns the issuer's public Ethereum address.
+  * `GET /documents` — Lists credential templates (`INCOME_CERTIFICATE`, `MARKSHEET`).
+  * `GET /issuer-info` — Returns the issuer public Ethereum address.
 </details>
 
 <details open>
-<summary><b>⚡ <code>packages/zk-core</code> — Cryptographic Merkle & Predicate Engine</b></summary>
+<summary><b>packages/zk-core — Cryptographic Merkle and Predicate Engine</b></summary>
 
 * **Type**: Framework-agnostic TypeScript Library | **Test Suite**: 53 Unit Tests (Jest)
-* **Purpose**: Core math engine responsible for SHA-256 Merkle tree generation, branch extraction, sibling path verification, and threshold/equality predicate witnesses.
+* **Function**: Core math engine responsible for SHA-256 Merkle tree construction, branch extraction, sibling path verification, and predicate witnesses.
 * **Key Exports**:
-  * `MerkleTree.fromFields(fields)` — Builds balanced Merkle trees from document key-value pairs.
+  * `MerkleTree.fromFields(fields)` — Constructs deterministic balanced Merkle trees from document key-value pairs.
   * `generateFieldProof(tree, index)` — Computes sibling hashes for leaf inclusion proofs.
-  * `verifyMerkleProof(leaf, proof, root)` — Verifies inclusion in $O(\log N)$ time.
-  * `generatePredicateProof(field, predicate)` — Generates commitment-based predicate witnesses (`gte`, `lte`, `eq`, `range`).
+  * `verifyMerkleProof(leaf, proof, root)` — Verifies inclusion proofs in logarithmic time.
+  * `generatePredicateProof(field, predicate)` — Generates predicate witnesses (`gte`, `lte`, `eq`, `range`).
 </details>
 
 <details open>
-<summary><b>🔍 <code>packages/verifier-sdk</code> — Third-Party Verifier SDK & Demo</b></summary>
+<summary><b>packages/verifier-sdk — Third-Party Verifier SDK and Reference Implementation</b></summary>
 
-* **Type**: Zero-dependency Browser/Node SDK | **Example App**: Port `5174` (Vite React)
-* **Purpose**: An installable npm package for third-party developers to request and verify ZK KYC proofs with 3 lines of code.
+* **Type**: Zero-dependency Browser/Node SDK | **Reference App**: Port `5174` (Vite + React)
+* **Function**: Installable npm package enabling third-party developers to request and verify ZK KYC proofs.
 * **Key Exports**:
   * `requestProof(options)` — Generates standardized QR codes and Base64URL deep-links.
-  * `verifyProof(payload, options)` — Executes full 4-step cryptographic & on-chain verification pipeline.
-  * `readIssuerRegistry(address, rpc)` & `readCredentialStatus(root, rpc)` — Direct Sepolia RPC contract readers.
+  * `verifyProof(payload, options)` — Executes cryptographic and on-chain verification pipeline.
+  * `readIssuerRegistry(address, rpc)` and `readCredentialStatus(root, rpc)` — Sepolia RPC contract readers.
 </details>
 
 <details open>
-<summary><b>📜 <code>contracts/</code> — Smart Contracts Suite</b></summary>
+<summary><b>contracts — Smart Contracts Suite</b></summary>
 
 * **Network**: Ethereum Sepolia (`11155111`) | **Tooling**: Hardhat + Solidity 0.8.24 + TypeChain
 * **Contracts**:
-  * [`IssuerRegistry.sol`](file:///e:/Projects/ZK-Kyc/contracts/contracts/IssuerRegistry.sol) — Owner-managed whitelist of trusted KYC issuers.
-  * [`CredentialStatus.sol`](file:///e:/Projects/ZK-Kyc/contracts/contracts/CredentialStatus.sol) — Maps `bytes32 credentialRoot => Status (Active / Revoked / Suspended)`.
+  * [`IssuerRegistry.sol`](file:///e:/Projects/ZK-Kyc/contracts/contracts/IssuerRegistry.sol) — Whitelist registry for certified KYC issuers.
+  * [`CredentialStatus.sol`](file:///e:/Projects/ZK-Kyc/contracts/contracts/CredentialStatus.sol) — Status registry mapping `bytes32 credentialRoot => Status (Active / Revoked / Suspended)`.
 </details>
 
 ---
 
-## ⛓️ Live Smart Contracts on Ethereum Sepolia
+## Live Smart Contracts on Ethereum Sepolia
 
-The trust anchors are live and verified on **Ethereum Sepolia (Chain ID: 11155111)**:
+The trust anchors are deployed and verified on **Ethereum Sepolia (Chain ID: 11155111)**:
 
 <div align="center">
 
-| Smart Contract | Deployed Sepolia Address | Etherscan Link | On-Chain State |
+| Smart Contract | Deployed Address | Block Explorer | Status |
 |---|---|---|---|
-| **`IssuerRegistry`** | `0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2` | [View on Etherscan ↗](https://sepolia.etherscan.io/address/0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2) | `Mock Issuer Whitelisted ✅` |
-| **`CredentialStatus`** | `0xDDD18e10FC082911e30428B5EDAbd21AaF098822` | [View on Etherscan ↗](https://sepolia.etherscan.io/address/0xDDD18e10FC082911e30428B5EDAbd21AaF098822) | `Active & Revocation Enabled ✅` |
+| **`IssuerRegistry`** | `0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2` | [View on Etherscan ↗](https://sepolia.etherscan.io/address/0x4059CDA0a6b67e5FA70e3689767a53E95DE022e2) | Active / Issuer Whitelisted |
+| **`CredentialStatus`** | `0xDDD18e10FC082911e30428B5EDAbd21AaF098822` | [View on Etherscan ↗](https://sepolia.etherscan.io/address/0xDDD18e10FC082911e30428B5EDAbd21AaF098822) | Active / Revocation Enabled |
 
 </div>
 
@@ -364,80 +357,75 @@ interface ICredentialStatus {
 }
 ```
 
-* **Public RPC Endpoint**: `https://ethereum-sepolia-rpc.publicnode.com` (Zero API key required)
-* **Official Faucet**: [Google Cloud Web3 Sepolia Faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)
+* **Public RPC Endpoint**: `https://ethereum-sepolia-rpc.publicnode.com`
+* **Testnet Faucet**: [Google Cloud Web3 Sepolia Faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia)
 
 ---
 
-## 🚀 Quick Start & Interactive Demo Walkthrough
+## Quick Start and Local Setup
 
-### 🛠️ Prerequisites
+### Prerequisites
 * **Node.js** v18.0.0 or higher
 * **pnpm** v8.0.0 or higher (`npm install -g pnpm`)
-* **MetaMask** or any Web3 wallet switched to **Ethereum Sepolia**
+* **MetaMask** or an EVM wallet configured to **Ethereum Sepolia**
 
 ---
 
-### 1️⃣ Clone & Install Dependencies
+### 1. Clone and Install Dependencies
 ```bash
 git clone https://github.com/aditya-raj9125/ZK-Kyc.git
 cd ZK-Kyc
 pnpm install
 ```
 
-### 2️⃣ Environment Setup
+### 2. Environment Configuration
+Copy the environment template:
 ```bash
 cp .env.example .env
 ```
-> ⚡ **Zero Setup Required**: The `.env` template already includes the pre-deployed Sepolia contract addresses and public RPC configuration.
+*(Pre-deployed Sepolia contract addresses and public RPC endpoints are configured by default.)*
 
-### 3️⃣ Launch the Full Monorepo
+### 3. Launch Services
 Open **three terminal tabs**:
 
 ```bash
-# Tab 1: Next.js Wallet App
-pnpm dev:wallet     # 🌐 Running at http://localhost:3000
+# Tab 1: Wallet Web Application (Port 3000)
+pnpm dev:wallet
 
-# Tab 2: Mock DigiLocker Issuer API
-pnpm dev:issuer     # 🏛️ Running at http://localhost:3001
+# Tab 2: Mock DigiLocker Issuer API (Port 3001)
+pnpm dev:issuer
 
-# Tab 3: Mock Loan Verifier App
-pnpm dev:verifier   # 🔍 Running at http://localhost:5174
+# Tab 3: Mock Verifier Reference Application (Port 5174)
+pnpm dev:verifier
 ```
 
 ---
 
-## 🎬 5-Step End-to-End Walkthrough
+## End-to-End Verification Walkthrough
 
-```
-┌────────────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   STEP-BY-STEP VERIFICATION FLOW                               │
-└────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-| Step | Application | Action | What Happens Under the Hood |
+| Step | Application | Action | Cryptographic Operation |
 |:---:|---|---|---|
-| **1** | **Wallet** (`:3000`) | Connect MetaMask on **Sepolia** | Wallet authenticates via Wagmi & RainbowKit. |
-| **2** | **Wallet** (`:3000`) | Click **"Issue Credential"** → *Income Certificate* | Mock Issuer (`:3001`) hashes fields into a Merkle tree, signs the root with ECDSA, and returns the signed credential. Only hashes are stored in `localStorage`. |
-| **3** | **Verifier** (`:5174`) | Select predicate `annualIncome ≥ 8 LPA` → Click **"Generate QR Code"** | SDK encodes the `ProofRequest` into a browser-safe Base64URL string and generates a QR code + deep link. |
-| **4** | **Wallet** (`:3000`) | Click deep-link or scan QR → Click **"Approve & Generate Proof"** | Wallet inspects the request, reconstructs the Merkle branch for `annualIncome`, generates a zero-knowledge predicate proof, and broadcasts it over `BroadcastChannel`. |
-| **5** | **Verifier** (`:5174`) | Automatic result screen | Verifier app receives proof payload in real-time, validates the Merkle math, checks on-chain contracts (`IssuerRegistry` + `CredentialStatus`), and displays **✅ Proof Valid**! |
+| **1** | **Wallet** (`:3000`) | Connect MetaMask on **Sepolia** | Wallet initializes session via Wagmi and RainbowKit. |
+| **2** | **Wallet** (`:3000`) | Click **"Issue Credential"** → *Income Certificate* | Mock Issuer (`:3001`) hashes attributes into a Merkle tree, signs the root with ECDSA, and returns the signed credential. Hashes are stored locally. |
+| **3** | **Verifier** (`:5174`) | Configure predicate `annualIncome >= 800000` → Click **"Generate QR Code"** | SDK serializes the `ProofRequest` into a Base64URL string and produces a QR code and deep link. |
+| **4** | **Wallet** (`:3000`) | Open deep link or scan QR → Click **"Approve & Generate Proof"** | Wallet resolves the request, derives the sibling path for `annualIncome`, builds the predicate proof, and transmits it via `BroadcastChannel` and HTTP relay. |
+| **5** | **Verifier** (`:5174`) | Automatic result screen | Verifier receives the payload, verifies Merkle inclusion, executes on-chain registry reads (`IssuerRegistry` + `CredentialStatus`), and displays **Proof Valid**. |
 
 ---
 
-## 🧪 Cryptographic & Contract Test Suite
+## Cryptographic and Contract Test Suite
 
-The repository features comprehensive test suites spanning cryptographic primitives, Merkle trees, and on-chain EVM logic:
+The repository contains test coverage for cryptographic algorithms, Merkle proofs, and smart contracts:
 
 ```bash
-# 1. Run Cryptographic Core Tests (53 Tests)
+# 1. Cryptographic Core Unit Tests (53 Tests)
 pnpm --filter @zk-kyc/zk-core test
 ```
 ```text
  PASS  tests/predicates.test.ts
   ✓ evaluatePredicate — equality, threshold (gte, lte, gt, lt), range (12 ms)
   ✓ generateEqProof & verifyFieldProof (15 ms)
-  ✓ generatePredicateProof — gte/lte commitment witnesses (18 ms)
+  ✓ generatePredicateProof — commitment witnesses (18 ms)
  PASS  tests/merkle.test.ts
   ✓ hashField & hashPair — deterministic SHA-256 (6 ms)
   ✓ MerkleTree construction — 2, 4, 8, odd-leaf trees (24 ms)
@@ -448,7 +436,7 @@ Tests:       53 passed, 53 total (100% Pass)
 ```
 
 ```bash
-# 2. Run Hardhat Smart Contract Tests (34 Tests)
+# 2. Hardhat Smart Contract Tests (34 Tests)
 pnpm contracts:test
 ```
 ```text
@@ -477,21 +465,20 @@ pnpm contracts:test
 
 ---
 
-## 💻 3-Minute Verifier SDK Integration Guide
+## Verifier SDK Integration Guide
 
-The `@zk-kyc/verifier-sdk` is designed for seamless integration into any web or Node.js application:
+The `@zk-kyc/verifier-sdk` package enables verification integration for web and Node.js environments:
 
 ```bash
 pnpm add @zk-kyc/verifier-sdk
 ```
 
-### 1. Generate Proof Request & QR Code
+### 1. Initiate Proof Request
 ```typescript
 import { requestProof } from '@zk-kyc/verifier-sdk';
 
-// Trigger a proof request with customizable predicate conditions
 const { qrDataUrl, walletUrl, requestId } = await requestProof({
-  verifierName: 'DeFi Lending Protocol',
+  verifierName: 'Enterprise Lending Application',
   verifierAddress: '0x1234...abcd',
   issuerAddress: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
   documentType: 'INCOME_CERTIFICATE',
@@ -500,12 +487,9 @@ const { qrDataUrl, walletUrl, requestId } = await requestProof({
   ],
   relayUrl: 'https://your-app.com/api/relay',
 });
-
-// Display QR code image: <img src={qrDataUrl} alt="Scan with ZK-KYC Wallet" />
-// Or provide deep link: <a href={walletUrl}>Open in ZK-KYC Wallet</a>
 ```
 
-### 2. Verify Incoming Proof Payload
+### 2. Verify Incoming Proof
 ```typescript
 import { verifyProof, type ProofPayload } from '@zk-kyc/verifier-sdk';
 
@@ -517,63 +501,40 @@ async function handleProofVerification(proof: ProofPayload) {
   });
 
   if (result.valid) {
-    console.log('✅ KYC Verification Successful!');
-    console.log('Verified Fields:', result.disclosedFields);
+    console.log('KYC Verification Successful');
+    console.log('Verified Attributes:', result.disclosedFields);
     console.log('Issuer Address:', result.issuerAddress);
     console.log('Audit Checks:', result.checks);
   } else {
-    console.error('❌ Verification Failed:', result.error);
+    console.error('Verification Failed:', result.error);
   }
 }
 ```
 
 ---
 
-## 🛡️ Security & Privacy Threat Model
+## Security and Privacy Threat Model
 
-| Threat / Attack Vector | Mitigation Strategy in ZK-KYC | Security Guarantee |
+| Threat / Attack Vector | Mitigation Strategy in ZK-KYC | Security Property |
 |---|---|---|
-| **Eavesdropping on Relay** | The proof payload only contains leaf hashes, sibling hashes, and mathematical commitments. | **No PII Exposure**: An observer intercepting the relay payload cannot determine name, income, or ID. |
-| **Credential Forgery** | The Merkle root is signed with the issuer's ECDSA private key. | **Unforgeable**: Forging a field requires generating a hash collision or breaking secp256k1 ECDSA. |
-| **Revoked Credential Replay** | Verification checks `CredentialStatus.isActive(root)` directly on Sepolia RPC. | **Instant Invalidation**: Revoked credentials fail verification immediately on-chain. |
-| **Untrusted Issuer Impersonation** | Verification resolves `IssuerRegistry.isTrustedIssuer(signer)`. | **On-Chain Governance**: Signatures from rogue or unregistered issuers are rejected. |
-| **Wallet Data Theft** | Raw values are kept strictly in client-side storage and never sent over the wire. | **Self-Sovereign**: The server and verifier never receive or store the underlying document. |
+| **Eavesdropping on Relay** | The proof payload contains only leaf hashes, sibling paths, and mathematical commitments. | **No PII Disclosure**: Observers cannot reconstruct raw names, income values, or identifier numbers. |
+| **Credential Forgery** | The Merkle root is signed with the issuer private key via ECDSA (`secp256k1`). | **Unforgeability**: Altering an attribute requires breaking SHA-256 preimage resistance or ECDSA signatures. |
+| **Revoked Credential Replay** | Verification performs live on-chain queries via `CredentialStatus.isActive(root)`. | **Immediate Invalidation**: Revoked credentials are systematically rejected on-chain. |
+| **Issuer Impersonation** | Verification asserts issuer status via `IssuerRegistry.isTrustedIssuer(signer)`. | **On-Chain Governance**: Signatures from unauthorized addresses are discarded. |
+| **Client Data Exfiltration** | Attribute values remain in browser storage and are never transmitted over the network. | **Self-Sovereign Privacy**: Neither the verifier nor intermediate relays receive the underlying document. |
 
 ---
 
-## 📊 Technical Comparison & Production Roadmap
-
-```mermaid
-timeline
-    title ZK-KYC Evolution Roadmap
-    Phase 1 (Completed) : Mock Issuer REST API : SHA-256 Merkle Engine : Sepolia Smart Contracts : Wallet UI & Dashboard
-    Phase 2 (Completed) : Predicate Proofs (gte/lte) : QR & Base64URL Protocol : Interactive Consent Flow
-    Phase 3 (Completed) : Standalone Verifier SDK : Dev Relay Plugin & IPC : Revocation Architecture
-    Phase 4 (Completed) : Ethereum Sepolia Deployment : Browser-Safe Web APIs : Multi-Tab Sync
-    Production (Next) : Groth16 zk-SNARKs (Circom) : Poseidon Hash Migration : BBS+ Signatures : W3C OID4VP Standard
-```
-
-| Dimension | Hackathon Implementation (Testnet) | Production Architecture (Target) |
-|---|---|---|
-| **Proof System** | SHA-256 Merkle Inclusion + Commitment Witnesses | Groth16 / Plonk zk-SNARK Circuits (`circom` + `snarkjs`) |
-| **Hash Function** | SHA-256 (Native Web API standard) | Poseidon Hash (Ultra low constraint count in SNARKs) |
-| **Signatures** | ECDSA (`secp256k1`) | BBS+ Multi-Message Signatures (ZK Selective Disclosure) |
-| **Data Anchoring** | Ethereum Sepolia Testnet | Ethereum Mainnet / Arbitrum / Polygon zkEVM |
-| **Transport Channel** | Base64URL Query + `BroadcastChannel` + HTTP Relay | W3C OpenID for Verifiable Presentations (OID4VP) |
-| **User Key Custody** | Browser `localStorage` (Isolated) | Hardware Secure Enclave / Mobile Keystore |
-
----
-
-## 📚 Technical Documentation Directory
+## Documentation Directory
 
 <div align="center">
 
-| Document | Target Audience | Primary Focus |
+| Document | Audience | Scope |
 |---|---|---|
-| 📖 **[System Architecture](docs/architecture.md)** | Core Engineers & Auditors | Deep-dive cryptographic specifications, data schemas, and Circom upgrade specs |
-| 🛠️ **[SDK Integration Guide](docs/sdk-integration-guide.md)** | Third-Party Developers | Comprehensive API documentation and integration snippets for `@zk-kyc/verifier-sdk` |
-| 🔍 **[Assumptions & Reality Matrix](docs/assumptions.md)** | Judges & Reviewers | Transparent inventory of testnet simulations versus production requirements |
-| 📜 **[Smart Contract Manual](contracts/README.md)** | Solidity Developers | Contract ABIs, deployment instructions, and test suite execution guides |
+| **[System Architecture](docs/architecture.md)** | Core Engineers and Auditors | In-depth cryptographic specifications, Merkle structures, and circuit upgrade paths |
+| **[SDK Integration Guide](docs/sdk-integration-guide.md)** | Third-Party Developers | API specifications and integration patterns for `@zk-kyc/verifier-sdk` |
+| **[Assumptions and Reality Matrix](docs/assumptions.md)** | Reviewers and Evaluators | Technical audit of simulated interfaces versus production deployment requirements |
+| **[Smart Contract Documentation](contracts/README.md)** | Solidity Developers | Contract ABIs, deployment instructions, and test runner configurations |
 
 </div>
 
@@ -581,6 +542,6 @@ timeline
 
 <div align="center">
 
-**ZK-KYC Monorepo** · Built for Ethereum Sepolia · *Privacy-Preserving Self-Sovereign Identity*
+**ZK-KYC Monorepo** · Ethereum Sepolia · Privacy-Preserving Self-Sovereign Identity
 
 </div>
