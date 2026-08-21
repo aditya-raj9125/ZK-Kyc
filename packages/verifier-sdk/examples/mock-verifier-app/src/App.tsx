@@ -27,7 +27,7 @@ const CREDENTIAL_STATUS_ADDRESS =
   import.meta.env['VITE_CREDENTIAL_STATUS_ADDRESS'] ?? '0x0000000000000000000000000000000000000000';
 const ISSUER_ADDRESS =
   import.meta.env['VITE_ISSUER_ADDRESS'] ?? '0x0000000000000000000000000000000000000000';
-const RPC_URL = 'https://rpc-amoy.polygon.technology/';
+const RPC_URL = 'https://ethereum-sepolia-rpc.publicnode.com';
 const RELAY_URL = 'http://localhost:5174/api/relay'; // This app's relay endpoint
 
 // In-memory relay store (dev only)
@@ -177,13 +177,45 @@ export default function App() {
 
   const startPolling = (rid: string) => {
     setStep('waiting');
-    pollInterval.current = window.setInterval(() => {
+
+    // Cross-tab real-time listener
+    let channel: BroadcastChannel | null = null;
+    try {
+      channel = new BroadcastChannel('zk_kyc_proof_relay');
+      channel.onmessage = (event) => {
+        if (event.data?.requestId === rid && event.data?.proof) {
+          if (pollInterval.current) clearInterval(pollInterval.current);
+          channel?.close();
+          setReceivedProof(event.data.proof);
+          void handleVerifyProof(event.data.proof);
+        }
+      };
+    } catch {}
+
+    pollInterval.current = window.setInterval(async () => {
+      // 1. Check local in-memory
       const proof = relayStore.get(rid);
       if (proof) {
         clearInterval(pollInterval.current!);
+        channel?.close();
         setReceivedProof(proof);
         void handleVerifyProof(proof);
+        return;
       }
+
+      // 2. Poll server relay endpoint
+      try {
+        const res = await fetch(`/api/relay/${rid}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.proof) {
+            clearInterval(pollInterval.current!);
+            channel?.close();
+            setReceivedProof(data.proof);
+            void handleVerifyProof(data.proof);
+          }
+        }
+      } catch {}
     }, 1000);
   };
 
