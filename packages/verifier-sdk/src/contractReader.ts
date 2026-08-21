@@ -29,7 +29,7 @@ export interface ContractReaderOptions {
  * Uses a public read-only JSON-RPC provider — free, no API key required.
  */
 export function createContractReader(options: ContractReaderOptions) {
-  const rpcUrl = options.rpcUrl ?? 'https://rpc-amoy.polygon.technology/';
+  const rpcUrl = options.rpcUrl ?? 'https://ethereum-sepolia-rpc.publicnode.com';
   const provider = new ethers.JsonRpcProvider(rpcUrl);
 
   const issuerRegistry = new ethers.Contract(

@@ -32,7 +32,7 @@ export interface VerifyProofOptions extends ContractReaderOptions {
  * const result = await verifyProof(proof, {
  *   issuerRegistryAddress: ISSUER_REGISTRY_ADDRESS,
  *   credentialStatusAddress: CREDENTIAL_STATUS_ADDRESS,
- *   rpcUrl: 'https://rpc-amoy.polygon.technology/',
+ *   rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
  * });
  *
  * if (!result.valid) {
