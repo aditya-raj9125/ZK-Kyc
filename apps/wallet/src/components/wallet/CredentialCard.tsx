@@ -39,7 +39,7 @@ export default function CredentialCard({ credential, walletAddress, onRemove }: 
 
   const fetchOnChainStatus = useCallback(async () => {
     const statusAddress = process.env['NEXT_PUBLIC_CREDENTIAL_STATUS_ADDRESS'];
-    const rpcUrl = process.env['NEXT_PUBLIC_RPC_URL'] ?? 'https://rpc-amoy.polygon.technology/';
+    const rpcUrl = process.env['NEXT_PUBLIC_RPC_URL'] ?? 'https://ethereum-sepolia-rpc.publicnode.com';
 
     if (!statusAddress || statusAddress === '0x0000000000000000000000000000000000000000') {
       setStatusLoading(false);

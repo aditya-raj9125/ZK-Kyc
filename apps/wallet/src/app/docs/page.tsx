@@ -72,7 +72,7 @@ function UserDocs() {
         content={[
           'Click "Connect Wallet" on the homepage or dashboard.',
           'Select MetaMask or any WalletConnect-compatible wallet.',
-          'Make sure you are on the Polygon Amoy testnet (Chain ID: 80002).',
+          'Make sure you are on the Ethereum Sepolia testnet (Chain ID: 11155111).',
           'Your wallet address becomes the holder identifier — credentials are stored locally and associated with this address.',
         ]}
       />
@@ -97,7 +97,7 @@ function UserDocs() {
         content={[
           'Each credential card shows: document type, issuer, Merkle root (shortened), and on-chain status.',
           'Click "View Field Tree" to see the Merkle leaves — field names and their SHA-256 hashes.',
-          'The on-chain status is fetched live from CredentialStatus.sol on Polygon Amoy.',
+          'The on-chain status is fetched live from CredentialStatus.sol on Ethereum Sepolia.',
           'Green "Active" badge = credential is valid. Red "Revoked" = credential has been revoked by the issuer.',
         ]}
       />
@@ -138,7 +138,7 @@ function UserDocs() {
         <h3 style={{ marginBottom: '12px', fontSize: '1.1rem' }}>📋 What Is Simulated vs. Real</h3>
         <div style={{ fontSize: '0.9rem', color: 'var(--color-text-secondary)', lineHeight: '1.8' }}>
           <p><strong style={{ color: 'var(--color-info)' }}>Simulated:</strong> DigiLocker/government API integration, OCR/PDF field extraction, real document signing by government authorities.</p>
-          <p><strong style={{ color: 'var(--color-success)' }}>Real:</strong> Merkle tree construction, SHA-256 field hashing, ECDSA issuer signatures, Polygon Amoy smart contracts, ZK proof generation and verification logic.</p>
+          <p><strong style={{ color: 'var(--color-success)' }}>Real:</strong> Merkle tree construction, SHA-256 field hashing, ECDSA issuer signatures, Ethereum Sepolia smart contracts, ZK proof generation and verification logic.</p>
           <p style={{ marginTop: '12px' }}><strong>This project is a proposed extension to DigiLocker/NAD-style infrastructure, not a replacement or competitor to it.</strong> The mock issuer simulates the shape of interaction a real DigiLocker issuer would have.</p>
         </div>
       </div>
@@ -206,7 +206,7 @@ const proof = await pollRelay(requestId);
 const result = await verifyProof(proof, {
   issuerRegistryAddress: '${issuerRegistry}',
   credentialStatusAddress: '${credentialStatus}',
-  rpcUrl: 'https://rpc-amoy.polygon.technology/',
+  rpcUrl: 'https://ethereum-sepolia-rpc.publicnode.com',
 });
 
 console.log(result);
@@ -279,12 +279,12 @@ console.log(result);
               <p style={{ fontSize: '0.8rem', marginTop: '8px', color: 'var(--color-text-secondary)' }}>{contract.desc}</p>
               {contract.address !== '(deploy first)' && (
                 <a
-                  href={`https://amoy.polygonscan.com/address/${contract.address}`}
+                  href={`https://sepolia.etherscan.io/address/${contract.address}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ fontSize: '0.75rem', marginTop: '8px', display: 'inline-block' }}
                 >
-                  View on Amoy Explorer ↗
+                  View on Sepolia Explorer ↗
                 </a>
               )}
             </div>

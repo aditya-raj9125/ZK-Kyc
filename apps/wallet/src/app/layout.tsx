@@ -16,7 +16,8 @@ export const metadata: Metadata = {
     'selective disclosure',
     'privacy',
     'blockchain',
-    'Polygon',
+    'Ethereum',
+    'Sepolia',
   ],
   openGraph: {
     title: 'ZK-KYC Wallet',

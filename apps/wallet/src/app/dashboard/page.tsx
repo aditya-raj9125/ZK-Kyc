@@ -142,7 +142,7 @@ export default function DashboardPage() {
                 Connected: <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--color-violet-light)' }}>
                   {address.slice(0, 6)}...{address.slice(-4)}
                 </span>
-                {' '}· Polygon Amoy Testnet
+                {' '}· Ethereum Sepolia Testnet
               </p>
             </div>
             <button

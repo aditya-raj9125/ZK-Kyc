@@ -3,7 +3,7 @@
 import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
-import { polygonAmoy } from 'wagmi/chains';
+import { sepolia } from 'wagmi/chains';
 import * as React from 'react';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ const projectId =
 const wagmiConfig = getDefaultConfig({
   appName: 'ZK-KYC Wallet',
   projectId,
-  chains: [polygonAmoy],
+  chains: [sepolia],
   ssr: true,
 });
 

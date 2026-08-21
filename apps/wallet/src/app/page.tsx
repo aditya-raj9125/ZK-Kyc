@@ -88,7 +88,7 @@ export default function HomePage() {
             marginBottom: '32px',
           }}>
             <span>●</span>
-            <span>Polygon Amoy Testnet · Hackathon Build</span>
+            <span>Ethereum Sepolia Testnet · Hackathon Build</span>
           </div>
 
           <h1 style={{ marginBottom: '24px', maxWidth: '800px', margin: '0 auto 24px' }}>
@@ -199,7 +199,7 @@ export default function HomePage() {
               </h3>
               <p style={{ fontSize: '0.9rem', lineHeight: '1.7' }}>
                 Issuer public keys and credential status (active/revoked) are anchored
-                on Polygon Amoy. Verifiers check on-chain status client-side — no backend
+                on Ethereum Sepolia. Verifiers check on-chain status client-side — no backend
                 call to this project required.
               </p>
             </div>
@@ -352,7 +352,7 @@ export default function HomePage() {
                         layer: '1',
                         name: 'Mock Issuer + Contracts',
                         pkg: 'apps/mock-issuer + contracts/',
-                        desc: 'Express REST API simulating DigiLocker. Builds Merkle tree, signs root. IssuerRegistry + CredentialStatus on Amoy.',
+                        desc: 'Express REST API simulating DigiLocker. Builds Merkle tree, signs root. IssuerRegistry + CredentialStatus on Sepolia.',
                         color: '#1d4ed8',
                       },
                     ].map((item) => (
@@ -475,12 +475,12 @@ export default function HomePage() {
             <Link href="/docs#sdk" style={{ color: 'var(--color-text-muted)' }}>SDK</Link>
             <Link href="/docs#assumptions" style={{ color: 'var(--color-text-muted)' }}>Assumptions</Link>
             <a
-              href="https://amoy.polygonscan.com"
+              href="https://sepolia.etherscan.io"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: 'var(--color-text-muted)' }}
             >
-              Amoy Explorer ↗
+              Sepolia Etherscan ↗
             </a>
           </div>
         </div>
