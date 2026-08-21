@@ -21,7 +21,7 @@ import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
  *      - Issuers cannot self-register (prevents Sybil attacks in production;
  *        for this testnet build the deployer acts as the governance authority).
  *
- * @custom:testnet Deployed on Polygon Amoy (Chain ID 80002). Testnet only.
+ * @custom:testnet Deployed on Ethereum Sepolia (Chain ID 11155111). Testnet only.
  */
 contract IssuerRegistry is Ownable {
     // ─────────────────────────────────────────────────────────────────────────

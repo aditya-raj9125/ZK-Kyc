@@ -9,12 +9,12 @@ import { ethers } from 'hardhat';
  *   3. Register the mock issuer address in IssuerRegistry
  *
  * Usage:
- *   pnpm contracts:deploy          → Polygon Amoy testnet
+ *   pnpm contracts:deploy          → Ethereum Sepolia testnet
  *   pnpm --filter @zk-kyc/contracts deploy:local → local Hardhat node
  *
  * After deployment: record addresses in contracts/README.md and .env
  *
- * Faucet for Polygon Amoy: https://faucets.chain.link/polygon-amoy
+ * Faucet for Ethereum Sepolia: https://cloud.google.com/application/web3/faucet/ethereum/sepolia
  */
 async function main() {
   const [deployer] = await ethers.getSigners();
@@ -30,7 +30,7 @@ async function main() {
   console.log(`Chain ID:  ${(await ethers.provider.getNetwork()).chainId}`);
   console.log(`Deployer:  ${deployer.address}`);
   console.log(
-    `Balance:   ${ethers.formatEther(await ethers.provider.getBalance(deployer.address))} POL`,
+    `Balance:   ${ethers.formatEther(await ethers.provider.getBalance(deployer.address))} ETH`,
   );
   console.log('───────────────────────────────────────────────────');
 
@@ -73,15 +73,15 @@ async function main() {
   console.log('───────────────────────────────────────────────────');
   console.log('\nBlock explorer links:');
   console.log(
-    `IssuerRegistry:   https://amoy.polygonscan.com/address/${issuerRegistryAddress}`,
+    `IssuerRegistry:   https://sepolia.etherscan.io/address/${issuerRegistryAddress}`,
   );
   console.log(
-    `CredentialStatus: https://amoy.polygonscan.com/address/${credentialStatusAddress}`,
+    `CredentialStatus: https://sepolia.etherscan.io/address/${credentialStatusAddress}`,
   );
   console.log('\nVerify with:');
-  console.log(`  npx hardhat verify --network amoy ${issuerRegistryAddress}`);
+  console.log(`  npx hardhat verify --network sepolia ${issuerRegistryAddress}`);
   console.log(
-    `  npx hardhat verify --network amoy ${credentialStatusAddress} ${issuerRegistryAddress}`,
+    `  npx hardhat verify --network sepolia ${credentialStatusAddress} ${issuerRegistryAddress}`,
   );
 }
 

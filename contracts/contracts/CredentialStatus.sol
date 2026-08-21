@@ -25,7 +25,7 @@ import {IssuerRegistry} from "./IssuerRegistry.sol";
  *        3. Call CredentialStatus.getStatus(credentialRoot) → must be Active.
  *        4. Verify Merkle proof and issuer signature off-chain.
  *
- * @custom:testnet Deployed on Polygon Amoy (Chain ID 80002). Testnet only.
+ * @custom:testnet Deployed on Ethereum Sepolia (Chain ID 11155111). Testnet only.
  */
 contract CredentialStatus is Ownable {
     // ─────────────────────────────────────────────────────────────────────────
