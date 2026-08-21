@@ -7,8 +7,10 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": ["node", "mocha", "chai"]
   },
-  "include": ["./scripts", "./test", "./hardhat.config.ts"],
+  "include": ["./scripts", "./test", "./hardhat.config.ts", "./typechain-types"],
   "files": ["./hardhat.config.ts"]
 }
+

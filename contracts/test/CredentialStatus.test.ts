@@ -18,24 +18,22 @@ describe('CredentialStatus', () => {
   const ZERO_ROOT = ethers.ZeroHash;
 
   beforeEach(async () => {
-    [owner, trustedIssuer, otherIssuer, nonIssuer] = await ethers.getSigners() as [
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-    ];
+    const signers = await ethers.getSigners();
+    owner = signers[0] as unknown as HardhatEthersSigner;
+    trustedIssuer = signers[1] as unknown as HardhatEthersSigner;
+    otherIssuer = signers[2] as unknown as HardhatEthersSigner;
+    nonIssuer = signers[3] as unknown as HardhatEthersSigner;
 
     // Deploy IssuerRegistry and register trustedIssuer
     const RegistryFactory = await ethers.getContractFactory('IssuerRegistry');
-    issuerRegistry = await RegistryFactory.deploy() as IssuerRegistry;
+    issuerRegistry = (await RegistryFactory.deploy()) as unknown as IssuerRegistry;
     await issuerRegistry.waitForDeployment();
     await issuerRegistry.registerIssuer(trustedIssuer.address);
 
     // Deploy CredentialStatus
     const StatusFactory = await ethers.getContractFactory('CredentialStatus');
-    credentialStatus = await StatusFactory.deploy(
-      await issuerRegistry.getAddress(),
-    ) as CredentialStatus;
+    const registryAddress = await issuerRegistry.getAddress();
+    credentialStatus = (await StatusFactory.deploy(registryAddress)) as unknown as CredentialStatus;
     await credentialStatus.waitForDeployment();
   });
 

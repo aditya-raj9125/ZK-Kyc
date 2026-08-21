@@ -12,15 +12,14 @@ describe('IssuerRegistry', () => {
   let nonOwner: HardhatEthersSigner;
 
   beforeEach(async () => {
-    [owner, issuer1, issuer2, nonOwner] = await ethers.getSigners() as [
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-      HardhatEthersSigner,
-    ];
+    const signers = await ethers.getSigners();
+    owner = signers[0] as unknown as HardhatEthersSigner;
+    issuer1 = signers[1] as unknown as HardhatEthersSigner;
+    issuer2 = signers[2] as unknown as HardhatEthersSigner;
+    nonOwner = signers[3] as unknown as HardhatEthersSigner;
 
     const Factory = await ethers.getContractFactory('IssuerRegistry');
-    registry = await Factory.deploy() as IssuerRegistry;
+    registry = (await Factory.deploy()) as unknown as IssuerRegistry;
     await registry.waitForDeployment();
   });
 
